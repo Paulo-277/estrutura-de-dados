@@ -1,24 +1,25 @@
+import RubroNegra.ArvoreRB;
+import RubroNegra.Cor;
+import RubroNegra.NoRB;
+
 public class Main {
     public static void main(String [] args){
-        ArvoreBinariaBusca arvore1 = new ArvoreBinariaBusca();
-        arvore1.inserir(55);
-        arvore1.inserir(20);
-        arvore1.inserir(80);
-        arvore1.inserir(10);
-        arvore1.inserir(40);
-        arvore1.inserir(70);
-        arvore1.inserir(95);
-        arvore1.inserir(5);
-        arvore1.inserir(15);
+        NoRB raiz = new NoRB(20, Cor.PRETO);
 
-        ArvoreBinariaBusca arvore2 = new ArvoreBinariaBusca();
-        int[] vetor = {5,10,15,20,40,55,70,80,95};
-        arvore2.construirBalanceada(vetor);
+        raiz.esquerdo = new NoRB(10, Cor.VERMELHO);
+        raiz.direito = new NoRB(30, Cor.VERMELHO);
+        raiz.esquerdo.esquerdo = new NoRB(5, Cor.VERMELHO);
+        raiz.esquerdo.direito = new NoRB(15, Cor.PRETO);
+        raiz.direito.esquerdo = new NoRB(25, Cor.PRETO);
+        raiz.direito.direito = new NoRB(40, Cor.PRETO);
+        raiz.esquerdo.esquerdo.esquerdo = new NoRB(2, Cor.PRETO);
+        raiz.esquerdo.esquerdo.direito = new NoRB(7, Cor.PRETO);
+        raiz.direito.direito.esquerdo = new NoRB(35, Cor.VERMELHO);
+        raiz.direito.direito.direito = new NoRB(50, Cor.VERMELHO);
 
-        arvore1.nivelValor(95);
-        System.out.println();
-        arvore2.nivelValor(95);
-        System.out.println();
-        arvore1.nivelValor(100);
+        ArvoreRB arvore1 = new ArvoreRB();
+        arvore1.raiz = raiz;
+        arvore1.desenhar();
+        arvore1.verAlturaPreta();
     }
 }
