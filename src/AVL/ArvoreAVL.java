@@ -3,27 +3,47 @@ package AVL;
 public class ArvoreAVL {
     private NoAVL raiz;
 
-    private int altura(NoAVL noAVL) {
-        if (noAVL == null) return -1;
-        return 1 + Math.max(altura(noAVL.esquerda), altura(noAVL.direita));
+    private int altura(NoAVL no) {
+        return (no == null) ? -1: no.altura;
     }
-    private int fatorDeBalanceamento(NoAVL noAVL) {
-        return altura(noAVL.esquerda) - altura(noAVL.direita);
+    private int fatorDeBalanceamento(NoAVL no) {
+        return altura(no.direita) - altura(no.esquerda);
     }
+    private void atualizarAltura(NoAVL no){
+        no.altura = 1 + Math.max(altura(no.esquerda), altura(no.direita));
+    }
+
     private int contarNos(NoAVL noAVL) {
         if(noAVL == null) return 0;
         return 1 + contarNos(noAVL.esquerda) + contarNos(noAVL.direita);
     }
 
-    public void inserir(int valor) {
-        raiz = inserir(raiz, valor);
+
+    public void inserir(int chave) {
+        raiz = inserir(raiz, chave);
     }
     private NoAVL inserir(NoAVL atual, int valor) {
-        if (atual == null) return new NoAVL(valor); // caso base
+        // caso base
+        if (atual == null) return new NoAVL(valor);
+        //posicionando o valor
         if (valor < atual.chave) {
             atual.esquerda = inserir(atual.esquerda, valor);
         } else if (valor > atual.chave) {
             atual.direita = inserir(atual.direita, valor);
+        } else return atual;
+
+        atualizarAltura(atual);
+        int fb = fatorDeBalanceamento(atual);
+        //balanceando a AVL
+        if(fb < -1){
+            if (fatorDeBalanceamento(atual.esquerda) <= 0){
+                return rotacaoDireita(atual); //LL
+            } else return rotacaoEsquerdaDireita(atual); //LR
+        }
+        if(fb > 1){
+            if(fatorDeBalanceamento(atual.direita) >= 0){
+                return rotacaoEsquerda(atual); //RR
+            }else return rotacaoDireitaEsquerda(atual); //RL
         }
         return atual;
     }
@@ -104,4 +124,38 @@ public class ArvoreAVL {
                 n, n - 1);
     }
 
+
+    //caso LL
+    private NoAVL rotacaoDireita(NoAVL z){
+        NoAVL y = z.esquerda;
+        NoAVL t3 = y.direita;
+
+        y.direita = z;
+        z.esquerda = t3;
+
+        atualizarAltura(z);
+        atualizarAltura(y);
+
+        return y;
+    }
+    // caso RR
+    private NoAVL rotacaoEsquerda(NoAVL z){
+        NoAVL y = z.direita;
+        NoAVL t2 = y.esquerda;
+
+        y.esquerda = z;
+        z.direita = t2;
+
+        atualizarAltura(z);
+        atualizarAltura(y);
+        return y;
+    }
+    private NoAVL rotacaoEsquerdaDireita(NoAVL z){
+        z.esquerda = rotacaoEsquerda(z.esquerda);
+        return rotacaoDireita(z);
+    }
+    private NoAVL rotacaoDireitaEsquerda(NoAVL z){
+        z.direita = rotacaoDireita(z.direita);
+        return rotacaoEsquerda(z);
+    }
 }
