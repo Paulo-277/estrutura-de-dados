@@ -18,7 +18,11 @@ public class ArvoreAVL {
         return 1 + contarNos(noAVL.esquerda) + contarNos(noAVL.direita);
     }
 
-
+    public void inserirVetor(int[] chaves){
+        for(int i = 0; i < chaves.length; i++){
+            inserir(chaves[i]);
+        }
+    }
     public void inserir(int chave) {
         raiz = inserir(raiz, chave);
     }
@@ -30,7 +34,10 @@ public class ArvoreAVL {
             atual.esquerda = inserir(atual.esquerda, valor);
         } else if (valor > atual.chave) {
             atual.direita = inserir(atual.direita, valor);
-        } else return atual;
+        } else{
+            atual.repeticoes++; //incremento do contador de repetições
+            return atual;
+        }
 
         atualizarAltura(atual);
         int fb = fatorDeBalanceamento(atual);
@@ -38,14 +45,36 @@ public class ArvoreAVL {
         if(fb < -1){
             if (fatorDeBalanceamento(atual.esquerda) <= 0){
                 return rotacaoDireita(atual); //LL
-            } else return rotacaoEsquerdaDireita(atual); //LR
+            } else{
+                return rotacaoEsquerdaDireita(atual); //LR
+                }
         }
-        if(fb > 1){
-            if(fatorDeBalanceamento(atual.direita) >= 0){
+        if(fb > 1) {
+            if (fatorDeBalanceamento(atual.direita) >= 0) {
                 return rotacaoEsquerda(atual); //RR
-            }else return rotacaoDireitaEsquerda(atual); //RL
+            } else{
+                return rotacaoDireitaEsquerda(atual); //RL
+                }
         }
         return atual;
+    }
+
+    public void busca(int chave){
+        System.out.printf("\nO nó %d aparece %d vezes na árvore\n", chave, busca(raiz, chave));
+    }
+
+    private int busca(NoAVL atual, int chave){
+        if(atual == null){
+            return 0;
+        }
+        if(atual.chave == chave){
+            return atual.repeticoes;
+        }
+        if(chave < atual.chave){
+            return busca(atual.esquerda, chave);
+        }else{
+            return busca(atual.direita,chave);
+        }
     }
 
     public void desenhar() {
